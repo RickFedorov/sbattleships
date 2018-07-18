@@ -1,7 +1,8 @@
 package engine;
 
 public class Game {
-    protected final String TAG = "TEST";
+    private static final String TAG = Game.class.getName();
+
     protected Player[] players;
     protected Puppeteer puppeteer;
 
