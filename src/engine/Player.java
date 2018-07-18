@@ -4,6 +4,7 @@ public class Player {
     protected Game game;
     protected Grid grid;
     protected Ship[] ships;
+    protected String name = "Unnamed player";
     protected boolean isDefeated = false;
     protected boolean isHuman = false;
 
