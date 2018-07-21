@@ -1,19 +1,31 @@
 package engine;
 
 public enum ShipType {
-    CARRIER     (5),
-    BATTLESHIP  (4),
-    CRUISER     (3),
-    SUBMARINE   (3),
-    DESTROYER   (2);
+    CARRIER     ("Carrier",     5),
+    BATTLESHIP  ("Battleship",  4),
+    CRUISER     ("Cruiser",     3),
+    SUBMARINE   ("Submarine",   3),
+    DESTROYER   ("Destroyer",   2);
 
-    private final int points;
+    private final String name;
+    private final int size;
 
-    ShipType(int points) {
-        this.points = points;
+
+    ShipType(String name, int points) {
+        this.name = name;
+        this.size = points;
     }
 
-    public int getPoints() {
-        return points;
+    public int getSize() {
+        return size;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "ShipType{"+this.name+"}";
     }
 }
