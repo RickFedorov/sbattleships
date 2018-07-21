@@ -18,47 +18,62 @@ public class Grid {
         this._generateGrid();
     }
 
-    private void _generateGrid(){
-        for (int r = 1; r <= this.rows; r++){
-            for (int c = 1; c <= this.columns; c++){
+    /**
+     *  Generate gir based on rows x columns setting
+     */
+    private void _generateGrid() {
+        for (int r = 1; r <= this.rows; r++) {
+            for (int c = 1; c <= this.columns; c++) {
                 gridMap.add(new Point(this, r, c));
             }
         }
     }
 
-    public boolean placeShip (Ship ship, Point start, Point end) {
+
+    /**
+     * @param ship ship which should be allocated in grid
+     * @param start defined start point
+     * @param end defined end point
+     * @return if successful
+     */
+    public boolean placeShip(Ship ship, Point start, Point end) {
 
         try {
-            Point[] gridPoints = this.findPointsInGrid(this.pointsInLine(start,end));
-            if (isAreaEmpty(gridPoints)){
+            Point[] gridPoints = this.findPointsInGrid(this.pointsInLine(start, end));
+            if (isAreaEmpty(gridPoints)) {
+
+                //Grid is empty ship can be allocated, update points and ships references
                 Arrays.stream(gridPoints).forEach(p -> p.setShip(ship));
+                ship.setPoints(gridPoints);
+
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         } catch (IndexOutOfBoundsException e) {
+            //out of grid, recurse above
             return false;
         }
 
     }
 
 
-    public boolean isAreaEmpty (Point[] gridPoints){
-        if (Arrays.stream(gridPoints).filter(b -> !b.isEmpty()).count()>0){
+    public boolean isAreaEmpty(Point[] gridPoints) {
+        if (Arrays.stream(gridPoints).filter(b -> !b.isEmpty()).count() > 0) {
             return false;
         }
         return true;
     }
 
+
     public Point[] findPointsInGrid(Point[] points) throws IndexOutOfBoundsException {
         Point[] gridPoints = new Point[points.length];
         int i = 0;
         for (Point point : points) {
-            if (!this.gridMap.contains(point)){
+            if (!this.gridMap.contains(point)) {
+                //line is outside of grid
                 throw new IndexOutOfBoundsException();
-            }
-            else {
+            } else {
                 gridPoints[i++] = this.gridMap.get(this.gridMap.indexOf(point));
             }
         }
@@ -66,28 +81,28 @@ public class Grid {
     }
 
 
-    public Point[] pointsInLine(Point start, Point end){
+    public Point[] pointsInLine(Point start, Point end) {
 
         int rowChange = end.getRow() - start.getRow();
         int colChange = end.getColumn() - start.getColumn();
         int size = rowChange + colChange;
 
-        if (size < 1){ throw new ArithmeticException("Size should be always positive.");}
+        if (size < 1) {
+            throw new ArithmeticException("Size should be always positive.");
+        }
 
         Point[] points = new Point[size];
 
 
         for (int i = 0; i < size; i++) {
-            if (rowChange != 0){
-                points[i] = new Point(start.getRow()+i,start.getColumn());
-            }
-            else{
-                points[i] = new Point(start.getRow(),start.getColumn()+i);
+            if (rowChange != 0) {
+                points[i] = new Point(start.getRow() + i, start.getColumn());
+            } else {
+                points[i] = new Point(start.getRow(), start.getColumn() + i);
             }
         }
 
-
-
+        //points in line
         return points;
     }
 
@@ -99,18 +114,33 @@ public class Grid {
         return rows;
     }
 
-    public void gridPrintDebug(){
-        for (int r = 1; r <= rows; r++){
+    public ArrayList<Point> getGridMap() {
+        return gridMap;
+    }
+
+    public void gridPrintDebug() {
+        //for debug only
+        new MessageLog(String.format("Player: " + this.player.getName() + "%n"));
+        for (int r = 1; r <= rows; r++) {
             String row = "";
-            for (int c = 1; c <= columns; c++){
-                if (gridMap.get(gridMap.indexOf(new Point(r,c))).isEmpty()){
-                    row = row + ".";
+            for (int c = 1; c <= columns; c++) {
+                Point point = gridMap.get(gridMap.indexOf(new Point(r, c)));
+                String fog = point.isEmpty() ? "." : String.valueOf(point.getShip().getShipType().getSize());
+
+                switch (point.getStatus()) {
+                    case FOG:
+                        row = row + fog;
+                        break;
+                    case EMPTY:
+                        row = row + "*";
+                        break;
+                    case HIT:
+                        row = row + "X";
+                        break;
                 }
-                else{
-                    row = row + String.valueOf(gridMap.get(gridMap.indexOf(new Point(r,c))).getShip().getShipType().getSize());
-                }
+
             }
-            System.out.println(row);
+            new MessageLog(String.format(row + "%n"));
         }
     }
 }
