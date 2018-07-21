@@ -13,6 +13,16 @@ public class Game {
         this.players[1] = new Player(this,false); //bot
 
         this.puppeteer = new Puppeteer(this, this.getPlayers()[1]);
+
+        //TODO debug puppeteer bot vs bot
+                Puppeteer debugPuppeter = new Puppeteer(this, this.getPlayers()[0]);
+
+                debugPuppeter.bot.getGrid().gridPrintDebug();
+                for (int d = 1; d < 25; d++){
+                    this.puppeteer.doTurn();
+                }
+                debugPuppeter.bot.getGrid().gridPrintDebug();
+
         this.currentPlayer = this.getPlayers()[0];
     }
 
@@ -40,4 +50,5 @@ public class Game {
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
+
 }
