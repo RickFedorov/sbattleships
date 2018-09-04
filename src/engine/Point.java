@@ -63,10 +63,10 @@ public class Point {
         List<Point> nearby = this.grid.getGridMap().stream()
                 .filter(P ->
                         (
-                                (row - 1 == P.getRow() && column == P.getColumn()) ||
-                                        (row + 1== P.getRow() && column == P.getColumn()) ||
-                                        (row == P.getRow() && column + 1 == P.getColumn()) ||
-                                        (row == P.getRow() && column - 1 == P.getColumn())
+                                (this.row - 1 == P.getRow() && this.column == P.getColumn()) ||
+                                (this.row + 1== P.getRow() && this.column == P.getColumn()) ||
+                                (this.row == P.getRow() && this.column + 1 == P.getColumn()) ||
+                                (this.row == P.getRow() && this.column - 1 == P.getColumn())
                         )
                                 && PointType.FOG == P.getStatus())
 
@@ -120,11 +120,11 @@ public class Point {
 
     @Override
     public String toString() {
-        return "Point{" +
+        return String.format("Point{" +
                 " row=" + row +
                 ", column=" + column +
                 ", status=" + status +
                 ", ship=" + ship +
-                '}';
+                "}");
     }
 }

@@ -40,8 +40,8 @@ public class Ship {
     public String toString() {
         return String.format("Ship{" +
                 "player=" + player.getName() +
-                ", points=" + Arrays.toString(points) +
-                "}%n");
+                ", shiptype=" + shipType.getName() +
+                "}");
     }
 
 

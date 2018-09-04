@@ -2,19 +2,51 @@ package engine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import engine.log.MessageLog;
 
+/**
+ * The type Puppeteer.
+ * Act as AI in the game.
+ */
 public class Puppeteer {
+    /**
+     * The Game holder.
+     */
     protected Game game;
-    protected Player bot;
+    /**
+     * The Bot. Who is the bot.
+     */
+    protected Player bot = null;
+    /**
+     * The Enemy player.
+     */
+    protected Player enemyPlayer = null;
+    /**
+     * The Bot names. Use randomly.
+     */
     protected final String[] botNames = new String[]{"John","Rick","Bob","Rob"};
 
 
+    /**
+     * Instantiates a new Puppeteer.
+     *
+     * @param game the game
+     * @param bot  the bot
+     */
     public Puppeteer(Game game, Player bot) {
         this.game = game;
         this.bot = bot;
+
+        //who is enemy
+        for (Player player: this.game.getPlayers()) {
+            if(!player.equals(this.bot)){
+                this.enemyPlayer = player;
+            }
+        }
 
         //set bot name
         this.bot.setName(this.botNames[new Random().nextInt(this.botNames.length)]);
@@ -23,6 +55,9 @@ public class Puppeteer {
         this._placeShips();
     }
 
+    /**
+     * Allocate ships into grid
+     */
     private void _placeShips(){
 
         for (Ship ship : this.bot.getShips()) {
@@ -32,6 +67,11 @@ public class Puppeteer {
         //this.bot.getGrid().gridPrintDebug();
     }
 
+    /**
+     *
+     * @param ship which ship to allocate
+     * @return
+     */
     private boolean _findPlace (Ship ship){
         int shipSize = ship.getShipType().getSize();
         Grid gridMap = ship.getPlayer().getGrid();
@@ -48,62 +88,75 @@ public class Puppeteer {
         }
 
         if (!gridMap.placeShip(ship,new Point(randRowStart, randColStart),new Point(randRowEnd, randColEnd))){
-            return this._findPlace(ship);
+            return this._findPlace(ship); //recursion there has to be a place to put a ship
         }
        //new MessageLog(new String().format(ship.getShipType().getName()+" ["+randRowStart+","+randColStart+"]:["+randRowEnd+","+randColEnd+"]%n"));
 
         return true;
     }
 
+    /**
+     * Do turn.
+     */
     public void doTurn(){
-        Player enemyPlayer = null;
-        Point[] enemyGrid;
-        ArrayList<Point> enemyGridFog = new ArrayList<>();
 
-        for (Player player: this.game.getPlayers()) {
-            if(!player.equals(this.bot)){
-                enemyPlayer = player;
-            }
-        }
+        this.fire(this._pickNearbyPoints());
+    }
 
-        enemyGrid = enemyPlayer.getGrid().getGridMap().toArray(new Point[enemyPlayer.getGrid().getGridMap().size()]);
-        for (Point point :
-                enemyGrid) {
-            if (point.getStatus() == PointType.FOG){
-                enemyGridFog.add(point);
-            }
-        }
+    /**
+     * Try to find Points near to the last hit if there is no such place then select randomly from FOG Points
+     * @return Point[] of possible fire solution
+     */
+    private Point[] _pickNearbyPoints(){
 
-        //todo  take enemy grid
-        //todo check hit history
-        //if not empty then connected hits
-        //if connected then which direction and fire
-        //if not connected than fire random
-        //todo exclude empty
-        //todo fire
-
-
-        if (this.bot.hitHistory.isEmpty()){
-            //no hit in the history = choose randomly
-            this.fire(enemyGridFog.toArray(new Point[enemyGridFog.size()]));
+        if (this.bot.getHitHistory().isEmpty()) //recursion base if no hit history
+        {
+            return this._pickFOGPoints();
         }
         else{
-           //hit in history log, try to locate the rest of the ship
-            this.fire(this._pickNearbyPoints());
+            Point lastHit = this.bot.getHitHistory().getLast();
+
+            if (lastHit.getShip().isDestroyed()){ //last hit destroyed ship so remove the from hit history and start look elsewhere
+                this.bot.getHitHistory().remove(lastHit);
+                return this._pickNearbyPoints(); //recursion
+            }
+            else {
+                List<Point> nearby = lastHit.getNearbyPoints();
+
+                if (nearby.size() < 1) //last point does not have any nearby point => remove from queue
+                {
+                    this.bot.getHitHistory().remove(lastHit);
+                    return this._pickNearbyPoints(); //recursion
+                } else {
+                    return nearby.toArray(new Point[nearby.size()]);
+                }
+            }
         }
 
     }
 
-    private Point[] _pickNearbyPoints(){
-        this.bot.hitHistory.getFirst();
+    /**
+     * Pick all FOG Points in enemy grid and return them.
+     * @return Point[] of possible fire solution
+     */
+    private Point[] _pickFOGPoints(){
+        List<Point> enemyGridFog = this.enemyPlayer.getGrid().getGridMap().stream()
+                .filter(P -> PointType.FOG == P.getStatus())
+                .collect(Collectors.toList());
 
+        return enemyGridFog.toArray(new Point[enemyGridFog.size()]);
     }
 
+    /**
+     * Fire.
+     *
+     * @param possibleTargetPoints the possible target points
+     */
     protected void fire (Point[] possibleTargetPoints){
         Point targetPoint = possibleTargetPoints[new Random().nextInt(possibleTargetPoints.length)];
         if (targetPoint.processFire() == PointType.HIT){
             //todo hit history
-            this.bot.hitHistory.add(targetPoint);
+            this.bot.getHitHistory().add(targetPoint);
         }
     }
 
