@@ -58,5 +58,7 @@ public class Player {
         return grid;
     }
 
-
+    public ArrayDeque<Point> getHitHistory() {
+        return hitHistory;
+    }
 }
