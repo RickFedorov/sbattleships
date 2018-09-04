@@ -1,6 +1,7 @@
 package engine;
 
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -10,9 +11,11 @@ public class Player {
     protected Game game;
     protected Grid grid;
     protected ArrayList<Ship> ships = new ArrayList<>();
+    protected ArrayDeque<Point> hitHistory = new ArrayDeque<>();
     protected String name = "Unnamed player";
     protected boolean isDefeated = false;
     protected boolean isHuman;
+
 
     public Player(Game game, boolean isHuman) {
         this.game = game;
@@ -54,4 +57,6 @@ public class Player {
     public Grid getGrid() {
         return grid;
     }
+
+
 }

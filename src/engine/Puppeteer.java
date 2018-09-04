@@ -56,14 +56,7 @@ public class Puppeteer {
     }
 
     public void doTurn(){
-        //todo  take enemy grid
-                //todo check hit history
-                //if not empty then connected hits
-                //if connected then which direction and fire
-                //if not connected than fire random
-        //todo exclude empty
-        //todo fire
-        Player enemyPlayer = this.bot;
+        Player enemyPlayer = null;
         Point[] enemyGrid;
         ArrayList<Point> enemyGridFog = new ArrayList<>();
 
@@ -81,14 +74,36 @@ public class Puppeteer {
             }
         }
 
+        //todo  take enemy grid
+        //todo check hit history
+        //if not empty then connected hits
+        //if connected then which direction and fire
+        //if not connected than fire random
+        //todo exclude empty
+        //todo fire
 
-        this.fire(enemyGridFog.toArray(new Point[enemyGridFog.size()]));
+
+        if (this.bot.hitHistory.isEmpty()){
+            //no hit in the history = choose randomly
+            this.fire(enemyGridFog.toArray(new Point[enemyGridFog.size()]));
+        }
+        else{
+           //hit in history log, try to locate the rest of the ship
+            this.fire(this._pickNearbyPoints());
+        }
+
+    }
+
+    private Point[] _pickNearbyPoints(){
+        this.bot.hitHistory.getFirst();
+
     }
 
     protected void fire (Point[] possibleTargetPoints){
         Point targetPoint = possibleTargetPoints[new Random().nextInt(possibleTargetPoints.length)];
         if (targetPoint.processFire() == PointType.HIT){
             //todo hit history
+            this.bot.hitHistory.add(targetPoint);
         }
     }
 

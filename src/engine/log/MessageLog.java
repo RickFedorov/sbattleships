@@ -1,6 +1,5 @@
 package engine.log;
 
-import com.google.gson.Gson;
 
 public class MessageLog {
     public MessageLog(String text) {

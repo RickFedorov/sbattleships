@@ -1,6 +1,9 @@
 package engine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -56,6 +59,21 @@ public class Point {
         return this.status;
     }
 
+    public List<Point> getNearbyPoints(){
+        List<Point> nearby = this.grid.getGridMap().stream()
+                .filter(P ->
+                        (
+                                (row - 1 == P.getRow() && column == P.getColumn()) ||
+                                        (row + 1== P.getRow() && column == P.getColumn()) ||
+                                        (row == P.getRow() && column + 1 == P.getColumn()) ||
+                                        (row == P.getRow() && column - 1 == P.getColumn())
+                        )
+                                && PointType.FOG == P.getStatus())
+
+                .collect(Collectors.toList());
+
+        return nearby;
+    }
 
     public int getRow() {
         return row;
