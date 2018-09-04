@@ -34,7 +34,7 @@ public class Player {
 
     public boolean isDefeated (){
         //check whether number of destroyed ships and if all are destroyed player is defeated.
-        if(Arrays.stream((Ship[]) this.ships.toArray()).filter(ship -> ship.isDestroyed()).count() == this.ships.size()){
+        if(this.ships.stream().filter(ship -> ship.isDestroyed()).count() == this.ships.size()){
             this.isDefeated = true;
         }
         return this.isDefeated;

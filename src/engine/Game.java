@@ -1,5 +1,7 @@
 package engine;
 
+import engine.log.MessageLog;
+
 public class Game {
     private static final String TAG = Game.class.getName();
 
@@ -17,10 +19,22 @@ public class Game {
         //TODO debug puppeteer bot vs bot
                 Puppeteer debugPuppeter = new Puppeteer(this, this.getPlayers()[0]);
 
+                this.puppeteer.bot.getGrid().gridPrintDebug();
                 debugPuppeter.bot.getGrid().gridPrintDebug();
-                for (int d = 1; d < 25; d++){
+                for (int d = 1; d < 100; d++){
                     this.puppeteer.doTurn();
+                    debugPuppeter.doTurn();
+
+                    if (this.puppeteer.bot.isDefeated()){
+                        new MessageLog(String.format("We have the winner: DebugPuppeter " +debugPuppeter.bot.getName() + "%n"));
+                        break;
+                    }
+                    if (debugPuppeter.bot.isDefeated()){
+                        new MessageLog(String.format("We have the winner:  Puppeter" +this.puppeteer.bot.getName() + "%n"));
+                        break;
+                    }
                 }
+                this.puppeteer.bot.getGrid().gridPrintDebug();
                 debugPuppeter.bot.getGrid().gridPrintDebug();
 
         this.currentPlayer = this.getPlayers()[0];
