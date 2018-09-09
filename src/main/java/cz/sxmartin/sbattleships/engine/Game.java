@@ -1,5 +1,6 @@
 package cz.sxmartin.sbattleships.engine;
 
+import cz.sxmartin.sbattleships.engine.exception.GameException;
 import cz.sxmartin.sbattleships.engine.log.MessageLog;
 
 public class Game {
@@ -43,6 +44,15 @@ public class Game {
 
     public Player[] getPlayers() {
         return players;
+    }
+
+    public Player getPlayer(boolean getHumanPlayer) throws GameException{
+        for (Player player: this.players) {
+            if(player.isHuman() == getHumanPlayer){
+                return player;
+            }
+        }
+        throw new GameException("Players not initialized or not found!");
     }
 
     public void setPlayers(Player[] players) {

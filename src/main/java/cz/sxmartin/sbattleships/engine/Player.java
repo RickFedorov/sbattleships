@@ -11,7 +11,7 @@ public class Player {
     protected ArrayDeque<Point> hitHistory = new ArrayDeque<>();
     protected String name = "Unnamed player";
     protected boolean isDefeated = false;
-    protected boolean isHuman;
+    protected boolean isHuman = false;
 
 
     public Player(Game game, boolean isHuman) {
@@ -28,6 +28,11 @@ public class Player {
             this.ships.add(new Ship(this,shipType));
         }
     }
+
+    public boolean isHuman() {
+        return this.isHuman;
+    }
+
 
     public boolean isDefeated (){
         //check whether number of destroyed ships and if all are destroyed player is defeated.

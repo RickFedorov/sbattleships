@@ -6,4 +6,8 @@ public class GameException extends Exception {
         super(message, cause);
     }
 
+    public GameException(String message) {
+        super(message);
+    }
+
 }

@@ -100,7 +100,7 @@ public class Puppeteer {
     }
 
     /**
-     * Try to find Points near to the last hit if there is no such place then select randomly from FOG Points
+     * Try to find Points near to the last hit if there is no such place then select randomly from fog Points
      * @return Point[] of possible fire solution
      */
     private Point[] _pickNearbyPoints(){
@@ -132,7 +132,7 @@ public class Puppeteer {
     }
 
     /**
-     * Pick all FOG Points in enemy grid and return them.
+     * Pick all fog Points in enemy grid and return them.
      * @return Point[] of possible fire solution
      */
     private Point[] _pickFOGPoints(){
