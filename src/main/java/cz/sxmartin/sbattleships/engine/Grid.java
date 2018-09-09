@@ -2,6 +2,8 @@ package cz.sxmartin.sbattleships.engine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import cz.sxmartin.sbattleships.engine.exception.GameException;
 import cz.sxmartin.sbattleships.engine.log.MessageLog;
 
 public class Grid {
@@ -113,8 +115,20 @@ public class Grid {
         return rows;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     public ArrayList<Point> getGridMap() {
         return gridMap;
+    }
+
+    public Point getPointXY(int row, int column) {
+        int index = this.gridMap.indexOf(new Point(row, column));
+        if (index < 0){
+            return null;
+        }
+        return this.gridMap.get(index);
     }
 
     public void gridPrintDebug() {

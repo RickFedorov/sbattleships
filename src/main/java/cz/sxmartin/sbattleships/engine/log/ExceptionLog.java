@@ -10,7 +10,7 @@ public class ExceptionLog {
         int y = 0;
         for(StackTraceElement stack : Thread.currentThread().getStackTrace()){
             if(stack.getClassName().equals("cz.sxmartin.sbattleships.engine.log.ExceptionLog")){
-                Log.d("BattleShip ErrorLog:",exeption.getMessage()+ " >>ERROR " + Thread.currentThread().getStackTrace()[y+1].toString());
+                Log.d("BattleShip_ErrorLog:",exeption.getMessage()+ " >>ERROR " + Thread.currentThread().getStackTrace()[y+1].toString());
                 break;
             }
             y++;
@@ -18,9 +18,9 @@ public class ExceptionLog {
 
         int i = 0;
         for(StackTraceElement stack : exeption.getStackTrace()){
-            Log.d("BattleShip ErrorLog",stack.toString());
+            Log.d("BattleShip_ErrorLog:",stack.toString());
             if (i++ > 1){break;}
         }
-        Log.d("BattleShip ErrorLog","-------------------------");
+        Log.d("BattleShip_ErrorLog:","-------------------------");
     }
 }

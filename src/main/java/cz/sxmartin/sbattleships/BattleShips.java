@@ -5,14 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import cz.sxmartin.sbattleships.engine.Game;
 import cz.sxmartin.sbattleships.engine.Grid;
-import cz.sxmartin.sbattleships.engine.Player;
 import cz.sxmartin.sbattleships.engine.log.ExceptionLog;
 import cz.sxmartin.sbattleships.engine.log.MessageLog;
 
@@ -23,7 +21,7 @@ public class BattleShips extends AppCompatActivity {
     View.OnTouchListener gridPointListner = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            new MessageLog(view.getId()+"");
+            GAME.testTURN();
             return false;
         }
     };
@@ -41,16 +39,17 @@ public class BattleShips extends AppCompatActivity {
             TableLayout playerGridMap = (TableLayout) findViewById(R.id.playerGridMap);
             TableLayout botGridMap = (TableLayout) findViewById(R.id.botGridMap);
 
-            _generateGirdMap(GAME.getPlayer(true).getGrid(), playerGridMap);
-            _generateGirdMap(GAME.getPlayer(false).getGrid(), botGridMap);
+            _generateGridMap(GAME.getPlayer(true).getGrid(), playerGridMap);
+            _generateGridMap(GAME.getPlayer(false).getGrid(), botGridMap);
 
+            GAME.testTURN();
         }
         catch (Exception e){
             new ExceptionLog(e);
         }
     }
 
-    private void _generateGirdMap(Grid grid, TableLayout gridMap){
+    private void _generateGridMap(Grid grid, TableLayout gridMap){
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0,0,0,0);
 
@@ -60,9 +59,7 @@ public class BattleShips extends AppCompatActivity {
             tr.setBackgroundColor(Color.parseColor("#ffff00"));
 
             for (int c = 1; c <= grid.getColumns(); c++){
-                ImageView td = new ImageView(this);
-                td.setImageResource(R.mipmap.fog);
-                td.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+                PointView td = new PointView(this, grid.getPointXY(r,c));
                 td.setOnTouchListener(gridPointListner);
 
                 //add Point

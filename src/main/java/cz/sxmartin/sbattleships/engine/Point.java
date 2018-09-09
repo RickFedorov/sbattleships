@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import cz.sxmartin.sbattleships.PointView;
+
 /**
  *
  */
@@ -15,7 +17,7 @@ public class Point {
     protected int column;
     protected Ship ship;
     protected PointType status = PointType.FOG;
-
+    protected PointView view;
 
     /**
      * Constructor for points in gridMap
@@ -55,6 +57,7 @@ public class Point {
             this.status = PointType.HIT;
             this.ship.processHit();
         }
+        this.view.updatePointView();
         return this.status;
     }
 
@@ -86,6 +89,14 @@ public class Point {
         return status;
     }
 
+    public Grid getGrid() {
+        return grid;
+    }
+
+    public PointView getView() {
+        return view;
+    }
+
     public void setRow(int row) {
         this.row = row;
     }
@@ -97,6 +108,11 @@ public class Point {
     public void setShip(Ship ship) {
         this.ship = ship;
     }
+
+    public void setView(PointView view) {
+        this.view = view;
+    }
+
 
     public Ship getShip() {
         return ship;
