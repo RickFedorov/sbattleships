@@ -21,7 +21,12 @@ public class BattleShips extends AppCompatActivity {
     View.OnTouchListener gridPointListner = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            GAME.testTURN();
+            //ignore touch in own gridMap
+            if(!((PointView) view).getPoint().getGrid().getPlayer().isHuman() && GAME.getCurrentPlayer().isHuman())
+            {
+                ((PointView) view).getPoint().processFire();
+                GAME.turn();
+            }
             return false;
         }
     };
@@ -42,7 +47,6 @@ public class BattleShips extends AppCompatActivity {
             _generateGridMap(GAME.getPlayer(true).getGrid(), playerGridMap);
             _generateGridMap(GAME.getPlayer(false).getGrid(), botGridMap);
 
-            GAME.testTURN();
         }
         catch (Exception e){
             new ExceptionLog(e);

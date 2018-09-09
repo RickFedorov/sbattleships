@@ -9,6 +9,15 @@
     tools:context=".BattleShips">
 
 
+    <EditText
+        android:id="@+id/playerGridMapText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:ems="10"
+        android:inputType="none|textPersonName"
+        android:text="Your grid:" />
+
     <TableLayout
         android:id="@+id/playerGridMap"
         android:layout_width="match_parent"
@@ -17,6 +26,15 @@
         tools:layout_editor_absoluteX="579dp"
         tools:layout_editor_absoluteY="49dp">
     </TableLayout>
+
+    <EditText
+        android:id="@+id/botGridMapText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Bot:" />
 
     <TableLayout
         android:id="@+id/botGridMap"

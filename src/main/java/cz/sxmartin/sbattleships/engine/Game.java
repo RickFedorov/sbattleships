@@ -19,7 +19,18 @@ public class Game {
         this.puppeteer = new Puppeteer(this, this.getPlayers()[1]);
         this.debugPuppeter = new Puppeteer(this, this.getPlayers()[0]);
 
-        this.currentPlayer = this.getPlayers()[0];
+        this.currentPlayer = this.getPlayers()[0]; //human player
+    }
+
+    public void turn(){
+        if(this.currentPlayer.equals(this.getPlayers()[1])){
+            this.currentPlayer = this.getPlayers()[0];
+        }
+        else{ //bot
+            this.currentPlayer = this.getPlayers()[1];
+            this.getPuppeteer().doTurn();
+            this.turn();
+        }
     }
 
     public void testTURN(){
