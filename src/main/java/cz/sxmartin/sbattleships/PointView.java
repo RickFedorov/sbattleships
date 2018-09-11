@@ -7,7 +7,7 @@ import cz.sxmartin.sbattleships.engine.Point;
 
 
 public class PointView extends android.support.v7.widget.AppCompatImageView {
-    private final Point point;
+    protected final Point point;
 
     public PointView(Context context, Point point) {
         super(context);

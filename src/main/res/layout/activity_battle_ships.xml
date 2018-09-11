@@ -1,49 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<cz.sxmartin.sbattleships.ZoomLinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/GameLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".BattleShips">
+    android:id="@+id/zoom_linear_layout"
+    android:layout_height="match_parent">
 
-
-    <EditText
-        android:id="@+id/playerGridMapText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:ems="10"
-        android:inputType="none|textPersonName"
-        android:text="Your grid:" />
-
-    <TableLayout
-        android:id="@+id/playerGridMap"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/GameLayout"
+        android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:layout_editor_absoluteX="579dp"
-        tools:layout_editor_absoluteY="49dp">
-    </TableLayout>
+        android:orientation="vertical"
+        tools:context=".BattleShips">
 
-    <EditText
-        android:id="@+id/botGridMapText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Bot:" />
 
-    <TableLayout
-        android:id="@+id/botGridMap"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        <TextView
+            android:id="@+id/playerGridMapText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Your grid:"
+            android:textColor="@android:color/white"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
-    </TableLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-</LinearLayout>
+            <TableLayout
+                android:id="@+id/playerGridMap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                tools:layout_editor_absoluteX="579dp"
+                tools:layout_editor_absoluteY="49dp"></TableLayout>
+
+            <LinearLayout
+                android:id="@+id/playerRemainingShipsText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/botGridMapText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Bot's grid:"
+            android:textColor="@android:color/white"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:id="@+id/botGridMap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="8dp">
+
+            </TableLayout>
+
+            <LinearLayout
+                android:id="@+id/botRemainingShipsText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:orientation="vertical"></LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</cz.sxmartin.sbattleships.ZoomLinearLayout>
