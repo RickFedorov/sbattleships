@@ -61,7 +61,7 @@ public class Point {
         return this.status;
     }
 
-    public List<Point> getNearbyPoints(){
+    public List<Point> getNearbyPoints(PointType pointType){
         List<Point> nearby = this.grid.getGridMap().stream()
                 .filter(P ->
                         (
@@ -70,7 +70,7 @@ public class Point {
                                 (this.row == P.getRow() && this.column + 1 == P.getColumn()) ||
                                 (this.row == P.getRow() && this.column - 1 == P.getColumn())
                         )
-                                && PointType.FOG == P.getStatus())
+                                && pointType == P.getStatus())
 
                 .collect(Collectors.toList());
 
