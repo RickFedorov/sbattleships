@@ -78,9 +78,9 @@ public class Puppeteer {
         int randColEnd = randColStart;
 
         if (new Random().nextBoolean()) {
-            randRowEnd = randRowStart + shipSize;
+            randRowEnd = randRowStart + shipSize - 1;
         } else {
-            randColEnd = randColStart + shipSize;
+            randColEnd = randColStart + shipSize - 1;
         }
 
         if (!gridMap.placeShip(ship, new Point(randRowStart, randColStart), new Point(randRowEnd, randColEnd))) {
@@ -118,16 +118,9 @@ public class Puppeteer {
             } else {
 
                 //guess direction
-                List<Point> nearbyHit = lastHit.getNearbyPoints(PointType.HIT);
-                List<Point> quessPoint = new ArrayList<>();
-                for (Point p : nearbyHit) {
-                    Point quess = this._guessDirection(lastHit, p);
-                    if (quess != null) {
-                        quessPoint.add(quess);
-                    }
-                }
-                if (quessPoint.size() > 0) {
-                    return quessPoint.toArray(new Point[quessPoint.size()]);
+                Point[] guess = guess(lastHit);
+                if (guess.length > 0){
+                    return guess;
                 }
 
                 //no nearby hit so pick one FOG near item randomly
@@ -145,11 +138,49 @@ public class Puppeteer {
 
     }
 
-    private Point _guessDirection(Point lastHit, Point nearbyHit) {
-        int changeRow = lastHit.getRow() - nearbyHit.getRow();
-        int changeColumn = lastHit.getColumn() - nearbyHit.getColumn();
-        return lastHit.getGrid().getPointXY(lastHit.getRow() + changeRow, lastHit.getColumn() + changeColumn);
+    private Point[] guess(Point lastHit){
+        //guess direction
+        List<Point> nearbyHit = lastHit.getNearbyPoints(PointType.HIT);
+        List<Point> quessPoint = new ArrayList<>();
+        for (Point p : nearbyHit) {
+            int changeRow = lastHit.getRow() - p.getRow();
+            int changeColumn = lastHit.getColumn() - p.getColumn();
+
+            quessPoint.add(this._findFOGPointDirection(lastHit, changeRow, changeColumn));
+            quessPoint.add(this._findFOGPointDirection(lastHit, -changeRow, -changeColumn));
+            while(quessPoint.remove(null)); //remove null
+
+        }
+
+        return quessPoint.toArray(new Point[quessPoint.size()]);
+
     }
+
+    /** Searching FOG point in the direction
+     *
+     * @param lastHit
+     * @param changeRow +-1
+     * @param changeColumn +-2
+     * @return
+     */
+    private Point _findFOGPointDirection(Point lastHit, int changeRow, int changeColumn){
+        Point pointXY= lastHit.getGrid().getPointXY(lastHit.getRow() + changeRow, lastHit.getColumn() + changeColumn);
+
+        if (pointXY == null){
+            return null;
+        }
+
+        switch (pointXY.getStatus()){
+            case FOG: return pointXY;
+
+            case EMPTY: return null;
+
+            case HIT: return _findFOGPointDirection(pointXY, changeRow, changeColumn);
+
+        }
+        return null;
+    }
+
 
     /**
      * Pick all fog Points in enemy grid and return them.

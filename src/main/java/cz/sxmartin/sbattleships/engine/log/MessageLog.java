@@ -13,7 +13,7 @@ public class MessageLog {
         for(StackTraceElement stack : Thread.currentThread().getStackTrace()){
 
             if(stack.getClassName().equals("cz.sxmartin.sbattleships.engine.log.MessageLog")){
-                Log.d("BattleShip_Log:",text +" >> " + Thread.currentThread().getStackTrace()[i+1].toString());
+                Log.d("_Log:",text +" >> " + Thread.currentThread().getStackTrace()[i+1].toString());
                 break;
             }
             i++;

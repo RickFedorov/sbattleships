@@ -39,6 +39,10 @@ public class Ship {
         return player;
     }
 
+    public Point[] getPoints() {
+        return points;
+    }
+
     public boolean isDestroyed() {
         return isDestroyed;
     }

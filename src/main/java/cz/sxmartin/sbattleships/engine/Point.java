@@ -57,7 +57,7 @@ public class Point {
             this.status = PointType.HIT;
             this.ship.processHit();
         }
-        this.view.updatePointView();
+        this.view.updateView();
         return this.status;
     }
 
@@ -87,6 +87,13 @@ public class Point {
 
     public PointType getStatus() {
         return status;
+    }
+
+    public void setStatus(PointType status) {
+        this.status = status;
+        if (this.getView() != null){
+            //this.getView().updateView();
+        }
     }
 
     public Grid getGrid() {

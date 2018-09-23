@@ -10,6 +10,8 @@ public class Game {
     protected Puppeteer puppeteer;
     protected Puppeteer debugPuppeter;
     protected Player currentPlayer;
+    protected boolean started = false;
+
 
     public Game() {
         this.players = new Player[2];
@@ -17,7 +19,7 @@ public class Game {
         this.players[1] = new Player(this,false); //bot
 
         this.puppeteer = new Puppeteer(this, this.getPlayers()[1]);
-        this.debugPuppeter = new Puppeteer(this, this.getPlayers()[0]);
+        //this.debugPuppeter = new Puppeteer(this, this.getPlayers()[0]);
 
         this.currentPlayer = this.getPlayers()[0]; //human player
     }
@@ -83,4 +85,12 @@ public class Game {
         this.currentPlayer = currentPlayer;
     }
 
+    public boolean hasStarted() {
+        return started;
+    }
+
+    public void beginGame(){
+        this.started = true;
+        this.currentPlayer = this.getPlayers()[0]; //human player
+    }
 }

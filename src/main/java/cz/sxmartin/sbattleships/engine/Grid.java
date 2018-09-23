@@ -3,10 +3,10 @@ package cz.sxmartin.sbattleships.engine;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import cz.sxmartin.sbattleships.engine.exception.GameException;
+import cz.sxmartin.sbattleships.Updateable;
 import cz.sxmartin.sbattleships.engine.log.MessageLog;
 
-public class Grid {
+public class Grid implements Updateable{
     private static final String TAG = Grid.class.getName();
 
     protected Player player;
@@ -20,7 +20,7 @@ public class Grid {
     }
 
     /**
-     *  Generate gir based on rows x columns setting
+     * Generate gir based on rows x columns setting
      */
     private void _generateGrid() {
         for (int r = 1; r <= this.rows; r++) {
@@ -32,20 +32,25 @@ public class Grid {
 
 
     /**
-     * @param ship ship which should be allocated in grid
+     * @param ship  ship which should be allocated in grid
      * @param start defined start point
-     * @param end defined end point
+     * @param end   defined end point
      * @return if successful
      */
     public boolean placeShip(Ship ship, Point start, Point end) {
 
         try {
-            Point[] gridPoints = this.findPointsInGrid(this.pointsInLine(start, end));
-            if (isAreaEmpty(gridPoints)) {
+            Point[] designatedPoints = this.findPointsInGrid(this.pointsInLine(start, end));
+            if (isAreaEmpty(designatedPoints)) {
 
                 //Grid is empty ship can be allocated, update points and ships references
-                Arrays.stream(gridPoints).forEach(p -> p.setShip(ship));
-                ship.setPoints(gridPoints);
+                if (ship.getPoints() != null){
+                    Arrays.stream(ship.getPoints()).forEach(p -> p.setShip(null)); //for reallocation
+                }
+
+                Arrays.stream(designatedPoints).forEach(p -> p.setShip(ship)); //for new allocation
+
+                ship.setPoints(designatedPoints); //set new points
 
                 return true;
             } else {
@@ -81,12 +86,18 @@ public class Grid {
         return gridPoints;
     }
 
+    public void updateView() {
+        for (Point point :
+                gridMap) {
+            point.getView().updateView();
+        }
+    }
 
     public Point[] pointsInLine(Point start, Point end) {
 
         int rowChange = end.getRow() - start.getRow();
         int colChange = end.getColumn() - start.getColumn();
-        int size = rowChange + colChange;
+        int size = Math.abs(rowChange + colChange) + 1;
 
         if (size < 1) {
             throw new ArithmeticException("Size should be always positive.");
@@ -97,9 +108,9 @@ public class Grid {
 
         for (int i = 0; i < size; i++) {
             if (rowChange != 0) {
-                points[i] = new Point(start.getRow() + i, start.getColumn());
+                points[i] = new Point(start.getRow() + (rowChange > 0 ? i : -i), start.getColumn());
             } else {
-                points[i] = new Point(start.getRow(), start.getColumn() + i);
+                points[i] = new Point(start.getRow(), start.getColumn() + (colChange > 0 ? i : -i));
             }
         }
 
@@ -125,7 +136,7 @@ public class Grid {
 
     public Point getPointXY(int row, int column) {
         int index = this.gridMap.indexOf(new Point(row, column));
-        if (index < 0){
+        if (index < 0) {
             return null;
         }
         return this.gridMap.get(index);

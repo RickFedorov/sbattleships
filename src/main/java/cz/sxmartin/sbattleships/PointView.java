@@ -6,7 +6,7 @@ import android.widget.TableRow;
 import cz.sxmartin.sbattleships.engine.Point;
 
 
-public class PointView extends android.support.v7.widget.AppCompatImageView {
+public class PointView extends android.support.v7.widget.AppCompatImageView implements Updateable{
     protected final Point point;
 
     public PointView(Context context, Point point) {
@@ -16,20 +16,22 @@ public class PointView extends android.support.v7.widget.AppCompatImageView {
 
         this.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
         this.setImageResource(R.mipmap.fog);
-        updatePointView();
-
+        //updateView();
     }
 
-    public void updatePointView(){
+    public void updateView() {
         boolean ownGrid = this.point.getGrid().getPlayer().isHuman();
         int display = R.mipmap.fog;
 
-        switch (this.point.getStatus()){
-            case FOG: display = ownGrid == true ? (this.point.isEmpty() ? R.mipmap.fog : R.mipmap.ship) : R.mipmap.fog ;
+        switch (this.point.getStatus()) {
+            case FOG:
+                display = ownGrid == true ? (this.point.isEmpty() ? R.mipmap.fog : R.mipmap.ship) : R.mipmap.fog;
                 break;
-            case HIT: display = ownGrid == true ? R.mipmap.ship_hit : R.mipmap.hit;
+            case HIT:
+                display = ownGrid == true ? R.mipmap.ship_hit : R.mipmap.hit;
                 break;
-            case EMPTY: display = R.mipmap.empty;
+            case EMPTY:
+                display = R.mipmap.empty;
                 break;
         }
         this.setImageResource(display);

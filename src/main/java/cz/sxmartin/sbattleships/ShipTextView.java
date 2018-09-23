@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import cz.sxmartin.sbattleships.engine.Ship;
 
-public class ShipTextView extends android.support.v7.widget.AppCompatTextView {
+public class ShipTextView extends android.support.v7.widget.AppCompatTextView implements Updateable{
     protected final Ship ship;
 
     public ShipTextView (Context context, Ship ship){
@@ -24,4 +24,23 @@ public class ShipTextView extends android.support.v7.widget.AppCompatTextView {
         invalidate();
     }
 
+    public void updateView(){
+        if (ship.getPoints() == null){
+            this.setTextColor((Color.parseColor("#FFFFFF")));
+        }
+        else{
+            if (ship.getPoints().length == ship.getShipType().getSize()){
+                this.setTextColor((Color.parseColor("#00FF00")));
+            }
+            else{
+                this.setTextColor((Color.parseColor("#FFFFFF")));
+            }
+        }
+
+        invalidate();
+    }
+
+    public Ship getShip() {
+        return ship;
+    }
 }
