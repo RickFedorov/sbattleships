@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.Toast;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -49,13 +50,13 @@ public class BattleShips extends AppCompatActivity {
                 ((PointView) view).getPoint().processFire();
                 ((PointView) view).setOnTouchListener(null);
                 GAME.turn();
+                updateViews();
             }
 
             if (motionEvent.getAction() == MotionEvent.ACTION_UP && placeShip != null && shipPoints.size() > 0){
                 _placeShipEvaluate();
             }
 
-            updateViews();
 
             return true;
         }
@@ -76,7 +77,7 @@ public class BattleShips extends AppCompatActivity {
         }
     };
 
-    final  GestureDetector.OnGestureListener onScrollPlayerGridListener = new GestureDetector.OnGestureListener() {
+    final GestureDetector.OnGestureListener onScrollPlayerGridListener = new GestureDetector.OnGestureListener() {
         public boolean onDown(MotionEvent motionEvent) {
             return false;
         }
@@ -103,7 +104,6 @@ public class BattleShips extends AppCompatActivity {
 
             if (collisionWith != null){
                 _placeShipOnScroll(collisionWith);
-                updateViews();
             }
 
             return false;
@@ -160,6 +160,9 @@ public class BattleShips extends AppCompatActivity {
                 _generateShips(GAME.getPlayer(false).getShips(), findViewById(R.id.botRemainingShipsText));
 
                 updateViews();
+                ((Button)  findViewById(R.id.btStart)).setActivated(false);
+
+                Toast.makeText(BATTLESHIPS_CONTEXT, "Game restarted! Place ships into your grid by tapping the ship type.", Toast.LENGTH_LONG).show();
             } catch (GameException e) {
                 new ExceptionLog(e);
             }
@@ -180,6 +183,7 @@ public class BattleShips extends AppCompatActivity {
         setContentView(R.layout.activity_battle_ships);
         BATTLESHIPS_ACTIVITY = this;
         BATTLESHIPS_CONTEXT = getApplicationContext();
+        ((Button) findViewById(R.id.btRestart)).setOnTouchListener(btRestart);
 
         //zoom
         final ZoomLinearLayout zoomLinearLayout = (ZoomLinearLayout) findViewById(R.id.zoom_linear_layout);
@@ -205,7 +209,7 @@ public class BattleShips extends AppCompatActivity {
             _generateShips(GAME.getPlayer(false).getShips(), findViewById(R.id.botRemainingShipsText));
 
             updateViews();
-
+            Toast.makeText(BATTLESHIPS_CONTEXT, "Place ships into your grid by tapping the ship type.", Toast.LENGTH_LONG).show();
         }
         catch (Exception e){
             new ExceptionLog(e);
@@ -268,13 +272,14 @@ public class BattleShips extends AppCompatActivity {
                 int rowL = Math.abs(shipPoints.getLast().getRow() - point.getRow());
                 int columnL = Math.abs(shipPoints.getLast().getColumn() - point.getColumn());
 
+                //move by 1
                 if ((rowF == 0 || columnF == 0) && ( (rowL == 0 && columnL == 1) ||  (rowL == 1 && columnL == 0) )){
                     pointView.setImageResource(R.mipmap.ship);
+                    pointView.invalidate();
                     shipPoints.add(point);
                 }
 
             }
-
         }
     }
 
@@ -287,6 +292,8 @@ public class BattleShips extends AppCompatActivity {
         else{
             try {
                 if (GAME.getPlayer(true).getGrid().placeShip(placeShip,shipPoints.getFirst(),shipPoints.getLast())){
+                    Toast.makeText(BATTLESHIPS_CONTEXT, placeShip.getShipType().getName() + " was assigned to grid!", Toast.LENGTH_SHORT).show();
+
                     placeShip = null;
                     shipPoints.clear();
                     checkAndActivateStartButton();
@@ -301,6 +308,7 @@ public class BattleShips extends AppCompatActivity {
                 new ExceptionLog(e);
             }
         }
+        updateViews();
     }
 
     private boolean _allShipsInGrid(){
@@ -326,7 +334,7 @@ public class BattleShips extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     GAME.beginGame();
-                    ((ViewGroup) btstart.getParent()).removeView(btstart);
+                    btstart.setActivated(false);
                 }
             });
             btstart.setActivated(true);

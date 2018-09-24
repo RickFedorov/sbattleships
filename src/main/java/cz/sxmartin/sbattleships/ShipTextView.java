@@ -2,6 +2,7 @@ package cz.sxmartin.sbattleships;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ public class ShipTextView extends android.support.v7.widget.AppCompatTextView im
         this.setText(this.ship.getShipType().getName() + "(" + this.ship.getShipType().getSize() + ")");
         this.setTextAppearance(R.style.TextAppearance_AppCompat_Body2);
         this.setTextColor((Color.parseColor("#FFFFFF")));
+        this.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
     }
 
     public void shipDestroyed(){
